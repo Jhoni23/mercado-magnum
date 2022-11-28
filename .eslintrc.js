@@ -17,8 +17,10 @@ module.exports = {
   ],
   rules: {
     'linebreak-style': 0,
-    'react/react-in-jsx-scope': 'off',
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
-    'no-use-before-define': ['error', { variables: '/styles/' }],
+    'no-use-before-define': ['error', { variables: false }],
+    'react/prop-types': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/style-prop-object': 'off',
+    'global-require': 0,
   },
 };
