@@ -1,8 +1,9 @@
 import React from 'react';
 import {
-  StyleSheet, View, StatusBar, TextInput, Image, TouchableOpacity, Text, ScrollView,
+  StyleSheet, View, StatusBar, TextInput, TouchableOpacity, ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import ItemList from '../../components/itemList';
 
 export default function Home({ navigation }) {
   return (
@@ -24,45 +25,26 @@ export default function Home({ navigation }) {
 
       <ScrollView style={styles.scrollItens}>
 
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => { navigation.navigate('Info'); }}
-        >
-          <Image style={styles.image} />
-          <View style={styles.description}>
-            <Text style={styles.title}>Arroz Tipo 1 5kg Camil</Text>
-            <Text style={styles.price}>RS26,99</Text>
-          </View>
-          <View style={styles.qntView}>
-            <TouchableOpacity style={styles.less}>
-              <Icon name="minus" size={28} color="#FFF" />
-            </TouchableOpacity>
-            <Text style={styles.qtd}>5</Text>
-            <TouchableOpacity style={styles.plus}>
-              <Icon name="plus" size={28} color="#FFF" />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+        <ItemList
+          image="https://qualycestas.vteximg.com.br/arquivos/ids/157301-1000-1000/c5065e54-b59d-4e86-9ca8-9ddb2224c17d.jpg?v=637846982714300000"
+          desc="Arroz Tipo 1 5Kg Camil"
+          price="26,99"
+          qtd={5}
+        />
 
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => { navigation.navigate('Info'); }}
-        >
-          <Image style={styles.image} />
-          <View style={styles.description}>
-            <Text style={styles.title}>Arroz Tipo 1 5kg Camil</Text>
-            <Text style={styles.price}>RS26,99</Text>
-          </View>
-          <View style={styles.qntView}>
-            <TouchableOpacity style={styles.less}>
-              <Icon name="minus" size={28} color="#FFF" />
-            </TouchableOpacity>
-            <Text style={styles.qtd}>5</Text>
-            <TouchableOpacity style={styles.plus}>
-              <Icon name="plus" size={28} color="#FFF" />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
+        <ItemList
+          image="https://imagens.gimba.com.br/objetosmidia/ExibirObjetoMidia?Id=124776"
+          desc="Feijão Carioca Tipo 1 1kg Camil"
+          price="7,99"
+          qtd={8}
+        />
+
+        <ItemList
+          image="https://imagens.gimba.com.br/objetosmidia/ExibirObjetoMidia?Id=53024"
+          desc="Açúcar Refinado 5kg 1 UN Caravelas"
+          price="17,50"
+          qtd={23}
+        />
 
       </ScrollView>
 
@@ -85,7 +67,7 @@ const styles = StyleSheet.create({
   },
   top: {
     width: '100%',
-    height: 100,
+    height: 90,
     backgroundColor: '#E95254',
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
@@ -102,6 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     borderRadius: 25,
     paddingHorizontal: 30,
+    paddingRight: 50,
     fontSize: 18,
   },
   scrollItens: {
@@ -118,64 +101,5 @@ const styles = StyleSheet.create({
     bottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  item: {
-    width: '100%',
-    height: 90,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 30,
-  },
-  image: {
-    width: 80,
-    aspectRatio: 1,
-    borderRadius: 13,
-    backgroundColor: '#D9D9D9',
-  },
-  description: {
-    flex: 1,
-    height: '70%',
-    marginLeft: 20,
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  price: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#5FA56E',
-  },
-  qntView: {
-    position: 'absolute',
-    height: 37,
-    width: 110,
-    right: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  less: {
-    height: '100%',
-    borderRadius: 100,
-    aspectRatio: 1,
-    backgroundColor: '#C7C7C7',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  plus: {
-    height: '100%',
-    borderRadius: 100,
-    aspectRatio: 1,
-    backgroundColor: '#929292',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  qtd: {
-    fontSize: 20,
-    fontWeight: '700',
   },
 });

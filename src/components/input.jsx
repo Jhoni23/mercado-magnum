@@ -3,9 +3,11 @@ import {
   TextInput, StyleSheet, Text, View,
 } from 'react-native';
 
-export default function Input({ customStyle, title, ...props }) {
+export default function Input({
+  customStyle, title, size, ...props
+}) {
   return (
-    <View style={[{ width: '100%' }, customStyle]}>
+    <View style={[{ width: `${size || 100}%` }, customStyle]}>
       <TextInput style={containerStyle} {...props} />
       <Text style={{
         backgroundColor: '#FFF',
@@ -26,7 +28,7 @@ export default function Input({ customStyle, title, ...props }) {
 const { containerStyle } = StyleSheet.create({
   containerStyle: {
     width: '100%',
-    height: 65,
+    height: 60,
     paddingHorizontal: 32,
     borderRadius: 50,
     borderWidth: 2.5,
