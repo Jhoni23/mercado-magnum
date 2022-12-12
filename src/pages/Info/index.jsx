@@ -1,18 +1,104 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import { useRoute, CommonActions } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet, View, StatusBar, Text, TouchableOpacity, Image, ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 
+import { AxiosError } from 'axios';
 import Input from '../../components/input';
+import { api } from '../../services/api';
+import { showToast } from '../../utils/showToast';
 
 export default function Info({ navigation }) {
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState(0);
-  const [quant, setQuant] = useState(0);
-  const [minEstoque, setMinEstoque] = useState(0);
-  const [maxExtoque, setMaxEstoque] = useState(0);
+  const [productData, setProductData] = useState({
+    description: null, qnt: null, qnt_max: null, qnt_min: null, price: null,
+  });
+  const { params } = useRoute();
+
+  useEffect(() => {
+    try {
+      if (params.id) {
+        (async () => {
+          const product = await api.get(`/product/${String(params.id)}`);
+          if (product.data.status !== 'Error') {
+            setProductData(product.data);
+          }
+        })();
+      } else {
+        showToast('Não foi possível acessar o ID do produto', 'error');
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response) {
+          showToast(err.response.data.message, 'error');
+        } else {
+          showToast('Erro de conexão', 'error');
+        }
+      } else {
+        showToast('Houve um erro');
+      }
+    }
+  }, []);
+
+  const handleUpdateSubmit = async () => {
+    try {
+      if (params.id) {
+        const response = await api.put(`/product/${String(params.id)}`, productData);
+        if (response.data.status === 'Sucesso') {
+          showToast('Produto atualizado com sucesso!');
+          setTimeout(() => navigation.dispatch(CommonActions.reset({
+            index: 1,
+            routes: [
+              { name: 'Home' },
+            ],
+          })), 500);
+        }
+      } else {
+        showToast('Não foi possível acessar o ID do produto');
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response) {
+          showToast(err.response.data.message, 'error');
+        } else {
+          showToast('Erro de conexão', 'error');
+        }
+      } else {
+        showToast('Houve um erro');
+      }
+    }
+  };
+
+  const handleDeleteSubmit = async () => {
+    try {
+      if (params.id) {
+        const response = await api.delete(`/product/${String(params.id)}`);
+        if (response.data.status === 'Sucesso') {
+          showToast('Produto excluído com sucesso!');
+          setTimeout(() => navigation.dispatch(CommonActions.reset({
+            index: 1,
+            routes: [
+              { name: 'Home' },
+            ],
+          })), 500);
+        }
+      } else {
+        showToast('Não foi possível acessar o ID do produto');
+      }
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response) {
+          showToast(err.response.data.message, 'error');
+        } else {
+          showToast('Erro de conexão', 'error');
+        }
+      } else {
+        showToast('Houve um erro');
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -40,19 +126,28 @@ export default function Info({ navigation }) {
           </TouchableOpacity>
 
           <Input
-            onChangeText={setDescription}
+            onChangeText={
+              (description) => setProductData((current) => ({ ...current, description }))
+            }
+            value={productData.description}
             title="Descrição"
           />
 
           <View style={styles.inputsGroup}>
             <Input
-              onChangeText={setPrice}
+              onChangeText={
+                (price) => setProductData((current) => ({ ...current, price }))
+              }
+              value={String(productData.price)}
               title="Preço"
               keyboardType="number-pad"
               size={47}
             />
             <Input
-              onChangeText={setQuant}
+              onChangeText={
+                (qnt) => setProductData((current) => ({ ...current, qnt }))
+              }
+              value={String(productData.qnt)}
               title="Qtd"
               keyboardType="number-pad"
               size={47}
@@ -63,20 +158,26 @@ export default function Info({ navigation }) {
 
           <View style={[styles.inputsGroup, { marginBottom: 20 }]}>
             <Input
-              onChangeText={setMinEstoque}
+              onChangeText={
+                (qnt_min) => setProductData((current) => ({ ...current, qnt_min }))
+              }
+              value={String(productData.qnt_min)}
               title="Min"
               keyboardType="number-pad"
               size={47}
             />
             <Input
-              onChangeText={setMaxEstoque}
+              onChangeText={
+                (qnt_max) => setProductData((current) => ({ ...current, qnt_max }))
+              }
+              value={String(productData.qnt_max)}
               title="Max"
               keyboardType="number-pad"
               size={47}
             />
           </View>
 
-          <TouchableOpacity style={styles.buttonAlter} onPress={() => {}}>
+          <TouchableOpacity style={styles.buttonAlter} onPress={handleUpdateSubmit}>
             <Text style={{
               color: '#FFF', fontSize: 18, fontWeight: '700', letterSpacing: 2,
             }}
@@ -85,7 +186,7 @@ export default function Info({ navigation }) {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonDelete} onPress={() => {}}>
+          <TouchableOpacity style={styles.buttonDelete} onPress={handleDeleteSubmit}>
             <Text style={{
               color: '#E95254', fontSize: 18, fontWeight: '700', letterSpacing: 2,
             }}

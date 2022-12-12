@@ -6,13 +6,14 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
 export default function ItemList({
-  image, desc, price, qtd,
+  image, desc, price, qtd, onPlusPress, onLessPress, customStyle, key, id,
 }) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
-      style={styles.item}
-      onPress={() => { navigation.navigate('Info'); }}
+      style={[customStyle, styles.item]}
+      key={String(key)}
+      onPress={() => { navigation.navigate('Info', { id: id || null }); }}
     >
       <Image
         style={styles.image}
@@ -26,11 +27,11 @@ export default function ItemList({
         </Text>
       </View>
       <View style={styles.qntView}>
-        <TouchableOpacity style={styles.less}>
+        <TouchableOpacity onPress={onLessPress} style={styles.less}>
           <Icon name="minus" size={28} color="#FFF" />
         </TouchableOpacity>
         <Text style={styles.qtd}>{qtd}</Text>
-        <TouchableOpacity style={styles.plus}>
+        <TouchableOpacity onPress={onPlusPress} style={styles.plus}>
           <Icon name="plus" size={28} color="#FFF" />
         </TouchableOpacity>
       </View>

@@ -5,15 +5,20 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import * as ImagePicker from 'expo-image-picker';
+import { CommonActions } from '@react-navigation/native';
+
+import { AxiosError } from 'axios';
+import { api } from '../../services/api';
 
 import Input from '../../components/input';
+import { showToast } from '../../utils/showToast';
 
 export default function Create({ navigation }) {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
-  const [quant, setQuant] = useState(0);
-  const [minEstoque, setMinEstoque] = useState(0);
-  const [maxExtoque, setMaxEstoque] = useState(0);
+  const [qnt, setQnt] = useState(0);
+  const [qnt_min, setQntMin] = useState(0);
+  const [qnt_max, setQntMax] = useState(0);
 
   const [image, setImage] = useState(null);
 
@@ -27,6 +32,36 @@ export default function Create({ navigation }) {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (!!!description
+        || !!!price
+        || !!!qnt
+        || !!!qnt_min
+        || !!!qnt_max) { showToast('Alguns parâmetros estão ausentes.', 'error'); }
+
+      const response = await api.post('product', {
+        description, price, qnt, qnt_min, qnt_max,
+      });
+
+      if (response.data.status === 'Sucesso') {
+        showToast('Produto cadastrado com sucesso!');
+        setTimeout(() => navigation.dispatch(CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Home' },
+          ],
+        })), 500);
+      }
+    } catch (e) {
+      if (e instanceof AxiosError) {
+        if (e.response) showToast(e.response.data.message, 'error');
+      } else {
+        showToast(e.message, 'error');
+      }
     }
   };
 
@@ -66,7 +101,7 @@ export default function Create({ navigation }) {
             size={47}
           />
           <Input
-            onChangeText={setQuant}
+            onChangeText={setQnt}
             title="Qtd"
             keyboardType="number-pad"
             size={47}
@@ -77,20 +112,20 @@ export default function Create({ navigation }) {
 
         <View style={styles.inputsGroup}>
           <Input
-            onChangeText={setMinEstoque}
+            onChangeText={setQntMin}
             title="Min"
             keyboardType="number-pad"
             size={47}
           />
           <Input
-            onChangeText={setMaxEstoque}
+            onChangeText={setQntMax}
             title="Max"
             keyboardType="number-pad"
             size={47}
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={{
             color: '#FFF', fontSize: 18, fontWeight: '700', letterSpacing: 2,
           }}

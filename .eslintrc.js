@@ -22,5 +22,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/style-prop-object': 'off',
     'global-require': 0,
+    camelcase: 'off',
+    'no-extra-boolean-cast': 'off',
   },
 };
